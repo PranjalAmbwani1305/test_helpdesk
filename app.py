@@ -1,42 +1,57 @@
 import streamlit as st
-from langchain_community.chat_models import ChatOpenAI
-from langchain_community.embeddings.openai import OpenAIEmbeddings
-from langchain_community.vectorstores import Pinecone as PineconeVectorStore
+import pinecone
+import os
 from langchain_community.text_splitter import RecursiveCharacterTextSplitter
-from pinecone import Pinecone
+from langchain_openai import OpenAIEmbeddings
+from langchain.vectorstores import Pinecone as PineconeVectorStore
+from langchain.chat_models import ChatOpenAI
 from dotenv import load_dotenv
 
-# ✅ Load API Keys from Streamlit Secrets
+# Load environment variables from Streamlit secrets
+load_dotenv()
+
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
-PINECONE_ENV = st.secrets["PINECONE_ENVIRONMENT"]
+PINECONE_ENV = st.secrets["PINECONE_ENV"]
 PINECONE_INDEX = st.secrets["PINECONE_INDEX"]
 
-# ✅ Initialize OpenAI Embeddings
-embeddings_model = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+# Initialize Pinecone
+pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
 
-# ✅ Initialize Pinecone
-pc = Pinecone(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
-index = pc.Index(PINECONE_INDEX)
+# Initialize OpenAI embeddings
+embeddings_model = OpenAIEmbeddings(api_key=OPENAI_API_KEY)
 
-# ✅ Function to Embed and Store Data
-def embed_and_store(texts):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-    split_texts = text_splitter.split_text(texts)
-    
-    # Store in Pinecone Vector Database
-    vectordb = PineconeVectorStore.from_texts(split_texts, embeddings_model, index_name=PINECONE_INDEX)
-    return vectordb
-
-# ✅ Streamlit App UI
-st.title("📌 AI Helpdesk with Pinecone & OpenAI")
+# Streamlit UI
+st.title("📌 AI Helpdesk Bot")
 
 # User Input
-user_input = st.text_area("Enter your query:")
+user_input = st.text_input("Ask me something:", "")
 
-if st.button("Submit"):
-    if user_input:
-        vectordb = embed_and_store(user_input)
-        st.success("Query embedded and stored successfully!")
-    else:
-        st.warning("Please enter some text.")
+# Function to Embed and Store Data in Pinecone
+def embed_and_store(texts):
+    index = pinecone.Index(PINECONE_INDEX)
+    
+    # Split text into chunks
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
+    chunks = text_splitter.split_text("\n".join(texts))
+    
+    # Convert chunks to embeddings
+    vectordb = PineconeVectorStore.from_texts(chunks, embeddings_model, index_name=PINECONE_INDEX)
+    
+    return vectordb
+
+# Chat Model Initialization
+chat_model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, temperature=0.5)
+
+# Function to Get AI Response
+def get_response(query):
+    if not query:
+        return "Please enter a valid question."
+    
+    response = chat_model.predict(query)
+    return response
+
+# Handle User Query
+if user_input:
+    response = get_response(user_input)
+    st.write(f"🤖 AI: {response}")
