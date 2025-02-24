@@ -3,7 +3,7 @@ import pdfplumber
 import os
 from pinecone import Pinecone
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain.vectorstores import Pinecone as PineconeVectorStore
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
