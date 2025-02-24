@@ -1,8 +1,8 @@
 import streamlit as st
-from langchain.chat_models import ChatOpenAI
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import Pinecone as PineconeVectorStore
+from langchain_community.chat_models import ChatOpenAI
+from langchain_community.embeddings.openai import OpenAIEmbeddings
+from langchain_community.vectorstores import Pinecone as PineconeVectorStore
+from langchain_community.text_splitter import RecursiveCharacterTextSplitter
 from pinecone import Pinecone
 from dotenv import load_dotenv
 
@@ -40,4 +40,3 @@ if st.button("Submit"):
         st.success("Query embedded and stored successfully!")
     else:
         st.warning("Please enter some text.")
-
