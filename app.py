@@ -5,7 +5,7 @@ from pinecone import Pinecone
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_pinecone import Pinecone as PineconeVectorStore
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
 from streamlit_chat import message
 from dotenv import load_dotenv
