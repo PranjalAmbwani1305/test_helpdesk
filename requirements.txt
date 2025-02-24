@@ -1,11 +1,7 @@
-streamlit
-python-dotenv
-pinecone
-pinecone-client
 langchain
 langchain-community
 langchain-openai
-openai
-tiktoken
-pdfplumber
-streamlit-chat
+langchain-pinecone
+pinecone-client
+streamlit
+python-dotenv
