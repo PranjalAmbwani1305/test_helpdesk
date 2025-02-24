@@ -7,3 +7,4 @@ streamlit-chat
 langchain
 langchain-openai
 langchain-pinecone
+python-dotenv
