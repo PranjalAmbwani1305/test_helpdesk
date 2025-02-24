@@ -1,7 +1,6 @@
 import streamlit as st
 import pdfplumber
 import os
-import pinecone
 from pinecone import Pinecone
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
