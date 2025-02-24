@@ -1,6 +1,6 @@
 langchain
 langchain-community
-angchain langchain-community langchain-core
+langchain-core
 langchain-openai
 langchain-pinecone
 pinecone-client
