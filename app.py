@@ -21,7 +21,7 @@ pinecone_env = os.getenv("PINECONE_ENV")
 pc = Pinecone(api_key=pinecone_api_key)
 
 # Connect to the Pinecone index
-index_name = "pdf562"
+index_name = "helpdesk"
 index = pc.Index(index_name)
 
 # Initialize LangChain LLM
